@@ -19,32 +19,108 @@ OpenAI's public docs describe the Codex app as available on macOS and Windows.
 The open-source component used by rich clients is the Codex app-server in the
 `openai/codex` repository; the desktop app itself is not redistributed here.
 
-## Install
+## Quick Start
+
+This installer needs the official macOS Intel Codex DMG. The DMG is not
+included in this repository.
+
+Download it from either source:
+
+- Official Codex app download page:
+  <https://developers.openai.com/codex/app>
+- Direct current macOS Intel DMG:
+  <https://persistent.oaistatic.com/codex-app-prod/Codex-latest-x64.dmg>
+
+On Ubuntu x86_64:
 
 Install system dependencies first:
 
 ```bash
 sudo apt update
-sudo apt install -y nodejs npm p7zip-full rsync python3 make g++
+sudo apt install -y curl p7zip-full rsync python3 make g++
 ```
 
-Install the Codex CLI and sign in:
+Install Node.js 22 or newer if `node --version` is older than `v22`:
+
+```bash
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt install -y nodejs
+node --version
+```
+
+Download the required DMG:
+
+```bash
+mkdir -p ~/Downloads
+curl -L --fail \
+  -o ~/Downloads/Codex-latest-x64.dmg \
+  https://persistent.oaistatic.com/codex-app-prod/Codex-latest-x64.dmg
+```
+
+Install the Codex CLI and sign in. If sign-in opens a browser, finish the
+browser flow before continuing:
 
 ```bash
 npm install -g @openai/codex
 codex login
 ```
 
-Then run the installer with your local DMG:
+Clone this repository, run the installer, and launch the app:
 
 ```bash
+git clone https://github.com/antonlobanovskiy/codex-app-ubuntu.git
+cd codex-app-ubuntu
 ./scripts/install.sh ~/Downloads/Codex-latest-x64.dmg
+codex-desktop-linux
 ```
 
-Launch it from your app menu as **Codex Ubuntu Port**, or run:
+You can also launch it from your app menu as **Codex Ubuntu Port**.
+
+## AI Agent Runbook
+
+Give this section to an AI agent with shell access on Ubuntu x86_64. The agent
+should run the commands from a normal working directory such as `~/dev`.
 
 ```bash
+set -euo pipefail
+
+sudo apt update
+sudo apt install -y curl p7zip-full rsync python3 make g++
+
+if ! command -v node >/dev/null 2>&1 || [ "$(node -p 'Number(process.versions.node.split(".")[0])' 2>/dev/null || echo 0)" -lt 22 ]; then
+  curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+  sudo apt install -y nodejs
+fi
+
+mkdir -p "$HOME/Downloads"
+curl -L --fail \
+  -o "$HOME/Downloads/Codex-latest-x64.dmg" \
+  https://persistent.oaistatic.com/codex-app-prod/Codex-latest-x64.dmg
+
+npm install -g @openai/codex
+codex login
+
+mkdir -p "$HOME/dev"
+cd "$HOME/dev"
+git clone https://github.com/antonlobanovskiy/codex-app-ubuntu.git
+cd codex-app-ubuntu
+
+./scripts/install.sh "$HOME/Downloads/Codex-latest-x64.dmg"
 codex-desktop-linux
+```
+
+Agent rules:
+
+- Stop at `codex login` if user interaction is required, then continue after
+  the user finishes sign-in.
+- Do not commit or upload `Codex-latest-x64.dmg`, `Codex.app`, `app.asar`,
+  extracted app folders, Electron runtime folders, user-data, logs, screenshots,
+  or credentials.
+- Before pushing any repository changes, run:
+
+```bash
+./scripts/prepublish-audit.sh
+git status --short
 ```
 
 Optional user service:
