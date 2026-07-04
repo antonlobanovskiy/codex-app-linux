@@ -9,6 +9,13 @@ fail() {
   exit 1
 }
 
+require_cmd() {
+  local cmd="$1"
+  command -v "$cmd" >/dev/null 2>&1 || fail "missing required command: $cmd"
+}
+
+require_cmd rg
+
 printf 'checking repository path...\n'
 case "$repo_root" in
   "$HOME/Downloads"*|"$HOME/.local/share/codex-mac-port"*|"$HOME/.local/share/codex-app-linux"*|"$HOME/.local/share/codex-app-ubuntu"*)
@@ -17,16 +24,23 @@ case "$repo_root" in
 esac
 
 printf 'checking project naming...\n'
-if rg -n \
+set +e
+rg -n \
   -g '!scripts/prepublish-audit.sh' \
   -e 'Codex App Ubuntu' \
   -e 'Codex Ubuntu Port' \
   -e 'codex-app-ubuntu\.desktop' \
   -e 'codex-app-ubuntu\.service' \
   -e 'github\.com/antonlobanovskiy/codex-app-ubuntu' \
-  README.md docs scripts .github >/tmp/codex-app-linux-audit-naming 2>/dev/null; then
+  README.md docs scripts .github >/tmp/codex-app-linux-audit-naming
+rg_status="$?"
+set -e
+if [ "$rg_status" -eq 0 ]; then
   cat /tmp/codex-app-linux-audit-naming >&2
   fail "Ubuntu-specific public project naming remains"
+fi
+if [ "$rg_status" -ne 1 ]; then
+  fail "project naming scan failed"
 fi
 
 printf 'checking for blocked generated paths...\n'
@@ -54,7 +68,8 @@ while IFS= read -r file; do
 done < <(git ls-files -co --exclude-standard)
 
 printf 'checking token-like content...\n'
-if rg -n --hidden --no-ignore-vcs \
+set +e
+rg -n --hidden --no-ignore-vcs \
   -g '!node_modules/**' \
   -g '!dist/**' \
   -g '!build/**' \
@@ -66,9 +81,15 @@ if rg -n --hidden --no-ignore-vcs \
   -e 'AKIA[0-9A-Z]{16}' \
   -e '-----BEGIN (RSA |OPENSSH |EC |DSA |)PRIVATE KEY-----' \
   -e '(access_token|refresh_token|id_token|OPENAI_API_KEY|CODEX_ACCESS_TOKEN)[[:space:]]*[:=][[:space:]]*["'\'']?[A-Za-z0-9._~+/=-]{12,}' \
-  . >/tmp/codex-app-linux-audit-secrets 2>/dev/null; then
+  . >/tmp/codex-app-linux-audit-secrets
+rg_status="$?"
+set -e
+if [ "$rg_status" -eq 0 ]; then
   cat /tmp/codex-app-linux-audit-secrets >&2
   fail "token-like content found"
+fi
+if [ "$rg_status" -ne 1 ]; then
+  fail "token-like content scan failed"
 fi
 
 printf 'checking scripts parse...\n'

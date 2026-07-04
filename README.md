@@ -11,7 +11,7 @@ patches, and documentation.
 ## Status
 
 - Tested on Ubuntu 24.04 x86_64 with GNOME/X11.
-- Fedora Workstation support is being added as a distro flavor.
+- Fedora Workstation support needs a community PR with test evidence.
 - Requires an OpenAI Codex desktop DMG that you already obtained from OpenAI.
 - Requires the Codex CLI to be installed and authenticated separately.
 - This is unsupported by OpenAI.
@@ -28,7 +28,7 @@ is installing system packages before running `scripts/install.sh`.
 | Distro | Status | Setup |
 | --- | --- | --- |
 | Ubuntu 24.04 x86_64 | Tested | [docs/ubuntu.md](docs/ubuntu.md) |
-| Fedora Workstation x86_64 | Community support in progress | [docs/fedora.md](docs/fedora.md) |
+| Fedora Workstation x86_64 | Needs community PR | [docs/fedora.md](docs/fedora.md) |
 
 See [docs/distro-support.md](docs/distro-support.md) for the full distro
 support matrix and test checklist. Contributions for new distros should follow
