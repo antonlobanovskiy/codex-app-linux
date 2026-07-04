@@ -30,6 +30,10 @@ is installing system packages before running `scripts/install.sh`.
 | Ubuntu 24.04 x86_64 | Tested | [docs/ubuntu.md](docs/ubuntu.md) |
 | Fedora Workstation x86_64 | Community support in progress | [docs/fedora.md](docs/fedora.md) |
 
+See [docs/distro-support.md](docs/distro-support.md) for the full distro
+support matrix and test checklist. Contributions for new distros should follow
+[CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## Quick Start
 
 This installer needs the official macOS Intel Codex DMG. The DMG is not
