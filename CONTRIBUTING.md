@@ -44,6 +44,7 @@ include secrets, logs with credentials, or `~/.codex/auth.json`.
 Run:
 
 ```bash
+command -v rg >/dev/null || echo "Install ripgrep before running the audit."
 ./scripts/prepublish-audit.sh
 git status --short
 ```
