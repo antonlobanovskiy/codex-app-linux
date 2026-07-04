@@ -133,7 +133,7 @@ NODE
 
 resolve_electron_dist() {
   local runner_dir="$1"
-  node - "$runner_dir" <<'NODE'
+  node - "$runner_dir" <<'NODE' | tail -n 1
 const path = require('node:path');
 const runner = process.argv[2];
 const electronPath = require(path.join(runner, 'node_modules', 'electron'));
@@ -249,7 +249,7 @@ mkdir -p "$runner_dir" "$native_dir"
 
 log "installing local build tools"
 if [ ! -f "$runner_dir/package.json" ]; then
-  npm --prefix "$runner_dir" init -y >/dev/null
+  (cd "$runner_dir" && npm init -y >/dev/null)
 fi
 npm --prefix "$runner_dir" install --save-exact @electron/asar @electron/rebuild >/dev/null
 
@@ -270,7 +270,7 @@ electron_dist="$(resolve_electron_dist "$runner_dir")"
 
 log "installing and rebuilding Linux native modules"
 if [ ! -f "$native_dir/package.json" ]; then
-  npm --prefix "$native_dir" init -y >/dev/null
+  (cd "$native_dir" && npm init -y >/dev/null)
 fi
 npm --prefix "$native_dir" install "better-sqlite3@^12.9.0" "node-pty@^1.1.0" >/dev/null
 "$runner_dir/node_modules/.bin/electron-rebuild" -v "$electron_version" -m "$native_dir" -f -w better-sqlite3 -w node-pty
