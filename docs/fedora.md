@@ -1,13 +1,13 @@
 # Fedora Setup
 
-These starter steps prepare Fedora before running the shared Linux installer.
-Fedora support is not checked off until a community PR includes real test
-evidence.
+These steps prepare Fedora before running the shared Linux installer.
 
-Community target needing validation:
+Community-tested target:
 
-- Fedora Workstation x86_64
-- GNOME/X11 compatibility mode
+- Fedora Linux 44 x86_64
+- Cinnamon desktop on X11
+
+GNOME/X11 and GNOME/Wayland still need separate validation.
 
 Install system packages:
 
