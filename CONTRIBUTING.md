@@ -12,7 +12,8 @@ Use a fork-based pull request. You do not need direct push access to this repo.
 3. Install and test from a clean checkout on the distro you are adding.
 4. Update [docs/distro-support.md](docs/distro-support.md):
    - Add or update the distro row.
-   - Change the support checkbox only when the installer actually ran.
+   - Change `Verified` to `[x]` and `Status` to `Tested` only when the installer
+     actually ran and the app launched.
    - Link your PR in the evidence column after opening it.
 5. Add a distro setup guide under `docs/` if the package commands differ from
    existing guides.
@@ -20,6 +21,12 @@ Use a fork-based pull request. You do not need direct push access to this repo.
 
 The maintainer controls merges. Contributors can open PRs from forks, but only
 repo maintainers can merge into `main`.
+
+A **Likely compatible (untested)** row only means the distro should be able to
+reuse an existing dependency guide because it has a closely related package
+base. It is still unverified. A PR must test the exact distro version, desktop
+environment, session type, and architecture before changing that row to
+`Tested`.
 
 ## Required Test Evidence
 
