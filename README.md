@@ -34,6 +34,11 @@ See [docs/distro-support.md](docs/distro-support.md) for the full distro
 support matrix and test checklist. Contributions for new distros should follow
 [CONTRIBUTING.md](CONTRIBUTING.md).
 
+The matrix also lists close Ubuntu and Fedora relatives as **Likely compatible
+(untested)** when they can reuse an existing package guide. That label is an
+inference from the shared package base, not evidence that the installer or app
+has run successfully on that distro.
+
 ## Quick Start
 
 This installer needs the official macOS Intel Codex DMG. The DMG is not
